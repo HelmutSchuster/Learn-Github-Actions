@@ -17,7 +17,7 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
   get-num-square:
-    needs: Explore_GitHub_Actions
+    needs: Explore-GitHub-Actions
     runs-on: ubuntu-latest
     name: Returns the number square
     steps:
