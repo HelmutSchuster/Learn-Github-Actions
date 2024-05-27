@@ -21,8 +21,8 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      - run: echo "The first day of the week is $DAY_OF_WEEK!"
-      - run: echo "Please contact ${{ env.CONTACT_PERSON }} under alias ${{ secrets.SPY_NAME }}."
+      - run: echo "The first day of the week is ${{DAY_OF_WEEK}}!"
+      - run: echo "Please contact ${{ vars.CONTACT_PERSON }} under alias ${{ secrets.SPY_NAME }}."
   get-num-square:
     needs: Explore-GitHub-Actions
     runs-on: ubuntu-latest
