@@ -1,29 +1,42 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is learning GitHub Actions 🚀
 on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+env:
+  author: Helmut
 
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     environment: Dev
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event by ${{ env.author }}"
+      - run: echo "This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "The workflow is ${{ github.workflow }} and the github.ref or branch is ${{ github.ref }}."
       - name: Check out repository code
         uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "The workflow is now ready to test your code on the runner."
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: echo "This job's status is ${{ job.status }}."
       - run: echo "Please contact ${{ vars.CONTACT_PERSON }} under alias ${{ secrets.SPY_NAME }}."
+      - name: Build
+        id: build_step
+        run: echo "build_id=$RANDOM" >> $GITHUB_OUTPUT
+    outputs:
+      build_id: ${{ steps.build_step.outputs.build_id }}
   get-num-square:
     needs: Explore-GitHub-Actions
     runs-on: ubuntu-latest
     name: Returns the number square
     steps:
+      - run: echo "Deploying build ${{ needs.Explore-GitHub-Actions.outputs.build_id }}"
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Fetch num squared
@@ -34,4 +47,12 @@ jobs:
         with:
           num: 11
       - name: Print the square
-        run: echo "${{ steps.get_square.outputs.num_squared }}"      
+        run: echo "${{ steps.get_square.outputs.num_squared }}"
+  calling-another-workflow:
+    uses: ./.github/workflows/input_example.yml
+    needs: Explore-GitHub-Actions
+    name: Example for calling another workflow
+    with:
+      build_id: 1
+      deploy_target: "C:/temp"
+      perform_deploy: true
