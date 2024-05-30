@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Returns the number square
     steps:
-      - run: echo "Deploying build ${{ needs.Explore-GitHub-Actions.outputs.build_id }}"
+      - run: echo "Printing build number ${{ needs.Explore-GitHub-Actions.outputs.build_id }}"
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Fetch num squared

@@ -23,3 +23,17 @@ jobs:
     steps:
       - name: Deploy build to target
         run: echo "Deploying build:${{ inputs.build_id }} to target:${{ inputs.deploy_target }}"
+    
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: ./src
+          key: ${{ hashFiles('requirements.txt')}}-test
+        
+      - name: Check if cache was not hit.
+        if : steps.cache.outputs.cache-hit != 'true'
+        run: echo "Cache was not hit."
+
+      - name: Check if cache was hit.
+        if : steps.cache.outputs.cache-hit == 'true'
+        run: echo "Cache was found."
