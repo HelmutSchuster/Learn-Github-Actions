@@ -27,8 +27,8 @@ jobs:
       - uses: actions/cache@v3
         id: cache
         with:
-          path: ./src
-          key: ${{ hashFiles('requirements.txt')}}-test
+          path: src
+          key: ${{ hashFiles('requirements.txt') }}-test
         
       - name: Check if cache was not hit.
         if : steps.cache.outputs.cache-hit != 'true'
