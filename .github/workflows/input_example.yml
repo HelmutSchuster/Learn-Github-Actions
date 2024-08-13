@@ -21,14 +21,16 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.perform_deploy }}
     steps:
+      - name: Show the workflow name
+        run: echo "The workflow is ${{ github.workflow }} and the github.ref or branch is ${{ github.ref }}."
       - name: Deploy build to target
         run: echo "Deploying build:${{ inputs.build_id }} to target:${{ inputs.deploy_target }}"
     
       - uses: actions/cache@v3
         id: cache
         with:
-          path: src
-          key: ${{ hashFiles('requirements.txt') }}-test
+          path: ./src
+          key:  ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         
       - name: Check if cache was not hit.
         if : steps.cache.outputs.cache-hit != 'true'
